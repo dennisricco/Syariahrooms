@@ -4,6 +4,141 @@
 
 @section('content')
     <div class="row">
+        @php
+    // Ambil jumlah total transaksi dari basis data
+    use App\Models\Transaction;
+    $totalTransactions = Transaction::count();
+
+    // Ambil jumlah transaksi untuk setiap keanggotaan
+    use App\Models\Membership;
+    $memberships = Membership::all();
+    $membershipTransactions = [];
+
+    foreach ($memberships as $membership) {
+    $membershipTransactions[$membership->name] = Transaction::where('membership_id', $membership->id)->count();
+    }
+
+    // Hitung jumlah transaksi yang tertunda
+    $pendingTransactions = Transaction::where('status', 'pending')->count();
+    $successTransactions = Transaction::where('status', 'success')->count();
+    $goldTransactions = Transaction::where('membership_id', '3')->count();
+    $platinumTransactions = Transaction::where('membership_id', '4')->count();
+    $silverTransactions = Transaction::where('membership_id', '5')->count();
+    @endphp
+
+<div class="row mb-18">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="detail-transaction" class="text-decoration-none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Transaksi</div>
+                            <div class="h2 mb-0 font-weight-bold text-gray-800">{{ $totalTransactions }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="detail-transaction" class="text-decoration-none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Pending</div>
+                            <div class="h2 mb-0 font-weight-bold text-gray-800">{{ $pendingTransactions }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="detail-transaction" class="text-decoration-none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Success</div>
+                            <div class="h2 mb-0 font-weight-bold text-gray-800">{{ $successTransactions }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div class="row mb-18">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="detail-transaction" class="text-decoration-none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Member Gold</div>
+                            <div class="h2 mb-0 font-weight-bold text-gray-800">{{ $goldTransactions }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="detail-transaction" class="text-decoration-none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Member Platinum</div>
+                            <div class="h2 mb-0 font-weight-bold text-gray-800">{{ $platinumTransactions }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="detail-transaction" class="text-decoration-none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Member Silver</div>
+                            <div class="h2 mb-0 font-weight-bold text-gray-800">{{ $silverTransactions }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
         <h3 class="my-16">Data Transaksi</h3>
         <div class="col">
             <div class="card card-body">
