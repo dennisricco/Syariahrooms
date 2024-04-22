@@ -22,6 +22,7 @@ class TransactionRepository
             ->join('memberships', 'transactions.membership_id', '=', 'memberships.id')
             ->where('users.name', 'like', "%$name%")
             ->orWhere('memberships.name', 'like', "%$name%")
+            ->orWhere('status', 'like', "%$name%")
             ->paginate($perPage);
     }
 
@@ -137,9 +138,75 @@ class TransactionRepository
         return $transaction;
     }
 
-    public function nonActiveMembership($id){
+    public function nonActiveMembership($id)
+    {
         $transaction = Transaction::find($id);
 
         return $transaction->update(['membership_active' => false]);
+    }
+
+    public function filterTransactions($month, $year, $membershipName)
+    {
+        $query = Transaction::query();
+
+        if ($month == null && $year == null && $membershipName == null) {
+            return $query->get();
+        }
+
+        if ($month !== null && $year !== null) {
+            $query->whereMonth('created_at', $month)
+                ->whereYear('created_at', $year);
+        } elseif ($year != null) {
+            $query->whereYear('created_at', $year);
+        } elseif ($month != null) {
+            $query->whereMonth('created_at', $month);
+        }
+
+        if ($membershipName !== null) {
+            $query->whereHas('membership', function ($query) use ($membershipName) {
+                $query->where('name', $membershipName);
+            });
+        }
+
+        return $query->get();
+    }
+    
+    public function getDataTransaksi(){
+        // Inisialisasi objek transaksi
+        $transactions = Transaction::all();
+    
+        // Hitung jumlah transaksi berdasarkan status
+        $successCount = $transactions->where('status', 'success')->count();
+        $pendingCount = $transactions->where('status', 'pending')->count();
+        $failedCount = $transactions->where('status', 'failed')->count();
+        $totalTransactionsCount = $transactions->count();
+    
+        // Bentuk array data dengan kunci yang sesuai
+        $data = [
+            'success' => $successCount,
+            'pending' => $pendingCount,
+            'failed' => $failedCount,
+            'total' => $totalTransactionsCount 
+        ];
+    
+        return $data;
+    }
+    
+    
+
+    public function getDataMember($month = null, $year = null, $membershipName = null){
+        $transactions = $this->filterTransactions($month, $year, $membershipName);
+
+        $goldCount = $transactions->where('membership_id', '3')->count();
+        $platinumCount = $transactions->where('membership_id', '4')->count();
+        $silverCount = $transactions->where('membership_id', '5')->count();
+    
+        $data = [
+            '3' => $goldCount,
+            '4' => $platinumCount,
+            '5' => $silverCount
+        ];
+    
+        return $data;
     }
 }
