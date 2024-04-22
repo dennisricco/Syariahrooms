@@ -74,7 +74,7 @@
       </h1>
       <p class="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48"></p>
       <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
-        <a href="login.html"
+        <a href="{{ route('dashboard.index') }}"
           class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-teal-500 hover:bg-teal-700 focus:ring-4 focus:ring-teal-500 dark:focus:ring-teal-900">
           Get started
           <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"

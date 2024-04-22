@@ -4,10 +4,10 @@ namespace App\Http\Controllers\SuperAdmin\Membership;
 
 use App\Http\Controllers\Controller;
 use App\Models\Membership;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Repositories\SuperAdmin\Membership\MembershipRepository;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Role;
 
 class MembershipController extends Controller
 {

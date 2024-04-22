@@ -21,7 +21,7 @@
         <h2 class="font-bold text-black text-2xl font-sans">Let's Get Started</h2>
         <p class="text-[#63B3A8] mt-1 font-sans">Sign up your account</p>
 
-        <form class="flex flex-col gap-2 mt-4" action="/registeruser" method="POST">
+        <form class="flex flex-col gap-2 mt-4" action="{{ route('register') }}" method="POST">
           @csrf
           <div class="flex flex-col sm:flex-row w-[330px] bg-[#DCDCDC] rounded-lg gap-2">
             <input
@@ -46,9 +46,9 @@
           <div class="flex flex-col sm:flex-row w-[330px] bg-[#DCDCDC] rounded-lg gap-2">
             <input
               class="bg-[#DCDCDC] p-2 ml-6 border-l-2 border-l-[#DCDCDC] rounded-lg text-black font-sans sm:w-[304px]"
-              type="text" name="gender" id="gender" placeholder="Gender">
+              type="text" name="phone" id="phone" placeholder="Phone">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-              class="bi bi-gender-ambiguous absolute translate-x-2 translate-y-3" viewBox="0 0 16 16">
+              class="bi bi-phone-ambiguous absolute translate-x-2 translate-y-3" viewBox="0 0 16 16">
               <path fill-rule="evenodd"
                 d="M11.5 1a.5.5 0 0 1 0-1h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V1.707l-3.45 3.45A4 4 0 0 1 8.5 10.97V13H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V14H6a.5.5 0 0 1 0-1h1.5v-2.03a4 4 0 1 1 3.471-6.648L14.293 1zm-.997 4.346a3 3 0 1 0-5.006 3.309 3 3 0 0 0 5.006-3.31z" />
             </svg>
@@ -88,7 +88,7 @@
           </div>
           <div id="checkPassword" class="font-bold text-[#B22222] mt-3 font-sans">Great job! Your password is strong
           </div>
-          <button class="bg-[#63B3A8] text-white p-2 rounded-md font-sans mt-3">Create my account</button>
+          <button class="bg-[#63B3A8] text-white p-2 rounded-md font-sans mt-3" type="submit">Create my account</button>
         </form>
         <p class="mt-6 font-sans text-center">By continuing you agree to our</p>
         <p class="font-sans text-center"><span class="text-[#63B3A8]">Terms & Conditions</span> and <span

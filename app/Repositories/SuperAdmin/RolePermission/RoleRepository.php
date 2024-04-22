@@ -4,7 +4,7 @@ namespace App\Repositories\SuperAdmin\RolePermission;
 
 use Illuminate\Support\Facades\Validator;
 use App\Helper\Response;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class RoleRepository {
     protected $response;

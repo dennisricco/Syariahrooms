@@ -2,11 +2,12 @@
 
 namespace App\Repositories\SuperAdmin\Transaction;
 
+use App\Models\Role;
 use Carbon\Carbon;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
+
 
 class TransactionRepository
 {

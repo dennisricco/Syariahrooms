@@ -12,11 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->after('id');
-            $table->unsignedBigInteger('membership_id')->after('user_id');
+            $table->foreignUuid('user_id')->after('id')->constrained();
+            $table->foreignUuid('membership_id')->after('user_id')->constrained();
+            // $table->unsignedBigInteger('user_id')->after('id');
+            // $table->unsignedBigInteger('membership_id')->after('user_id');
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('membership_id')->references('id')->on('memberships');
+            // $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('membership_id')->references('id')->on('memberships');
         });
     }
 

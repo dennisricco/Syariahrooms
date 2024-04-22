@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->date('start_date')->nullable();
             $table->date('finish_date')->nullable();
             $table->string('snap_token')->nullable();

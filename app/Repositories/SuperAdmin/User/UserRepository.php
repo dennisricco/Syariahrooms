@@ -5,8 +5,9 @@ namespace App\Repositories\SuperAdmin\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Helper\Response;
+use App\Models\Role;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
+
 
 class UserRepository
 {
