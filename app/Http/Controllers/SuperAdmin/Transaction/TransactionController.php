@@ -7,10 +7,12 @@ use App\Models\Membership;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Repositories\SuperAdmin\Transaction\TransactionRepository;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+
 
 class TransactionController extends Controller
 {
@@ -26,16 +28,23 @@ class TransactionController extends Controller
         $this->middleware('permission:transaction-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:transaction-destroy', ['only' => ['destroy']]);
         $this->transactionRepository = $transactionRepository;
+   
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        
         $transaction = Transaction::with(['membership', 'user'])->get();
         $users = User::all();
         $memberships = Membership::all();
 
-        return view('master.dashboard.transaksi.detail-transaksi.index', ['transaction' => $transaction, 'users' => $users, 'memberships' => $memberships]);
+        $dataTransaksi = $this->transactionRepository->getDataTransaksi();
+        $dataMember = $this->transactionRepository->getDataMember();
+        $totalTransactions = $this->transactionRepository->getDataTransaksi();
+        // $silverTransactions = Transaction::where('membership_id', '5')->count();
+        return view('master.dashboard.transaksi.detail-transaksi.index', compact( 'dataTransaksi','dataMember','totalTransactions'), ['transaction' => $transaction, 'users' => $users, 'memberships' => $memberships, 'request' => $request, 'dataTransaksi']);
     }
+
 
     public function data(Request $request)
     {
@@ -111,8 +120,37 @@ class TransactionController extends Controller
         }
     }
 
-    public function nonActiveMembership(Request $request){
+    public function nonActiveMembership(Request $request)
+    {
         $this->transactionRepository->nonActiveMembership($request->id);
         return response()->json(['message' => 'Lepas Membership successfully']);
     }
+
+    public function loadTransaksi(Request $request)
+{
+    $search = $request->input('search');
+    $status = $request->input('status'); // Mengambil status dari request
+
+    $query = Transaksi::query();
+
+    // Filter data transaksi berdasarkan status 'pending' jika diperlukan
+    if ($status && $status === 'pending') {
+        $query->where('status', 'pending');
+    }
+
+    // Sisipkan logika pencarian jika diperlukan
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('nama_mitra', 'like', "%$search%")
+              ->orWhere('membership', 'like', "%$search%");
+        });
+    }
+
+    // Lanjutkan dengan logika lainnya seperti pengaturan pagination dan lain-lain
+    $transactions = $query->paginate(10); // Misalnya, disini saya menggunakan pagination dengan batasan 10 item per halaman
+
+    return response()->json($transactions);
+}
+
+
 }

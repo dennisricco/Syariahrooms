@@ -4,6 +4,92 @@
 
 @section('content')
 <div class="row">
+
+    @php
+    use App\Models\Role;
+    use App\Models\User;
+    use App\Models\Membership;
+    use App\Models\Transaction;
+
+    // Ambil daftar role dari basis data
+    $roles = Role::all();
+
+    if ($roles->isNotEmpty()) {
+    // Ambil total transaksi
+    $totalTransactions = Transaction::count();
+    }
+    @endphp
+
+    @if($roles->isNotEmpty())
+    <div class="row">
+        @foreach($roles as $role)
+        @php
+        // Fetch user count for the given role
+        $userCount = User::whereHas('roles', function($query) use ($role) {
+        $query->where('name', $role->name);
+        })->count();
+
+        // Fetch membership associated with the role
+        $membership = Membership::where('name', substr(strstr($role->name, '-'),1))->first();
+
+        // Fetch the number of transactions associated with the membership
+
+        $membershipTransactions = 0;
+        if ($membership) {
+        // Menghitung jumlah transaksi untuk keanggotaan yang sesuai dengan ID keanggotaan
+        $membershipTransactions = Transaction::where('membership_id', $membership->id)->count();
+        }
+        @endphp
+
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ $role->name }}</h4>
+                    <button class="btn btn-primary show-detail" data-role="{{ $role->name }}">Lihat Detail</button>
+
+                    <!-- Detail form initially hidden -->
+                    <div class="col-md-6 mb-4 detail-form" data-input="{{ $role->name }}" style="display: none;">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <p class="card-text">Jumlah Pengguna: {{ $userCount }}</p>
+                                {{-- Add membership name if needed --}}
+                                {{-- <p class="card-text">Membership: {{ $membershipName }}</p> --}}
+                                <p class="card-text">Jumlah Transaksi: {{ $membershipTransactions }}</p>
+                                <!-- Additional transaction details can be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+    @else
+    <p>No roles found.</p>
+    @endif
+
+    <script>
+        // Tangkap peristiwa klik tombol "Lihat Detail"
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.show-detail');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                const detailForm = this.parentElement.querySelector('.detail-form');
+                toggleDetailForm(detailForm);
+            });
+        });
+    });
+
+    // Fungsi untuk menampilkan atau menyembunyikan form detail
+    function toggleDetailForm(detailForm) {
+        if (detailForm.style.display === 'none') {
+            detailForm.style.display = 'block';
+        } else {
+            detailForm.style.display = 'none';
+        }
+    }
+    </script>
+
     <h3 class="my-16">User / User</h3>
     <div class="col">
         <div class="card card-body">
@@ -11,7 +97,8 @@
                 <div class="row justify-content-between my-10 gap-10 px-0">
                     <div class="row mx-md-0 col-auto mx-auto gap-10">
                         @can('user-store')
-                        <button class="btn btn-primary col col-sm-auto add-user"><i class="ri-add-line remix-icon"></i><span>Tambah User</span></button>
+                        <button class="btn btn-primary col col-sm-auto add-user"><i
+                                class="ri-add-line remix-icon"></i><span>Tambah User</span></button>
                         @endcan
                     </div>
                     <div class="mx-md-0 col-auto mx-auto">
@@ -19,7 +106,8 @@
                             <span class="input-group-text hp-bg-dark-100 border-end-0 pe-0 bg-white">
                                 <i class="iconly-Light-Search text-black-80" style="font-size: 16px;"></i>
                             </span>
-                            <input class="form-control border-start-0 ps-8" id="search_user" name="search_user" type="text" value="" placeholder="Search User">
+                            <input class="form-control border-start-0 ps-8" id="search_user" name="search_user"
+                                type="text" value="" placeholder="Search User">
                         </div>
                     </div>
                 </div>
@@ -42,7 +130,8 @@
                         </table>
                     </div>
                     <div class="text-center">
-                        <nav class="col-12 col-sm-auto text-center pagination_user" aria-label="Page navigation example">
+                        <nav class="col-12 col-sm-auto text-center pagination_user"
+                            aria-label="Page navigation example">
                         </nav>
                         <br>
                         <p class="user_entry"></p>
@@ -57,7 +146,8 @@
                     <form id="formUser">
                         <div class="modal-header">
                             <h5 class="modal-title" id="modalUserLabel">Tambah User</h5>
-                            <button class="btn-close hp-bg-none d-flex align-items-center justify-content-center" data-bs-dismiss="modal" type="button" aria-label="Close">
+                            <button class="btn-close hp-bg-none d-flex align-items-center justify-content-center"
+                                data-bs-dismiss="modal" type="button" aria-label="Close">
                                 <i class="ri-close-line hp-text-color-dark-0 lh-1" style="font-size: 24px;"></i>
                             </button>
                         </div>
@@ -65,25 +155,30 @@
                             <input class="user_id" id="user_id" name="id" type="text">
                             <div class="form-group mb-12">
                                 <label for="name">Nama</label>
-                                <input class="form-control name" id="name" name="name" type="text" placeholder="Nama" required>
+                                <input class="form-control name" id="name" name="name" type="text" placeholder="Nama"
+                                    required>
                             </div>
                             <div class="form-group mb-12">
                                 <label for="email">Email</label>
-                                <input class="form-control email" id="email" name="email" type="email" placeholder="Email" required>
+                                <input class="form-control email" id="email" name="email" type="email"
+                                    placeholder="Email" required>
                             </div>
                             <div class="form-group mb-12">
                                 <label for="noHp">No HP</label>
-                                <input class="form-control noHp" id="noHp" name="phone" type="text" placeholder="No HP" required>
+                                <input class="form-control noHp" id="noHp" name="phone" type="text" placeholder="No HP"
+                                    required>
                             </div>
                             <div class="form-group mb-12">
                                 <label for="address">Alamat</label>
-                                <input class="form-control address" id="address" name="address" type="text" placeholder="Alamat" required>
+                                <input class="form-control address" id="address" name="address" type="text"
+                                    placeholder="Alamat" required>
                             </div>
                             <div class="form-group mb-12">
                                 <label for="password">Password</label>
-                                <input class="form-control password" id="password" name="password" type="password" placeholder="Password" required>
+                                <input class="form-control password" id="password" name="password" type="password"
+                                    placeholder="Password" required>
                             </div>
-                            <div class="form-group mb-12">
+                            {{-- <div class="form-group mb-12">
                                 <label for="role">Role</label>
                                 <select class="form-control select2 role" id="role" name="role">
                                     <option value="" disabled selected>Pilih Role</option>
@@ -91,17 +186,33 @@
                                     <option value="{{$r->name}}">{{$r->name}}</option>
                                     @endforeach
                                 </select>
+                            </div> --}}
+                            <div class="form-group mb-12">
+                                <label for="role">Role</label>
+                                <select class="form-control select2 role" id="role" name="role">
+                                    <option value="" disabled selected>Pilih Role</option>
+                                    @if($roles->isNotEmpty())
+                                    @foreach($roles as $r)
+                                    <option value="{{ $r->name }}">{{ $r->name }}</option>
+                                    @endforeach
+                                    @else
+                                    <option value="" disabled>No roles found</option>
+                                    @endif
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">
                             @can('user-store')
-                            <button class="btn btn-primary btn-save-user" type="submit"><i class="icofont icofont-plus"></i> Tambah</button>
+                            <button class="btn btn-primary btn-save-user" type="submit"><i
+                                    class="icofont icofont-plus"></i> Tambah</button>
                             @endcan
                             @can('user-update')
-                            <button class="btn btn-primary btn-edit-user" type="submit"><i class="icofont icofont-pencil"></i> Edit</button>
+                            <button class="btn btn-primary btn-edit-user" type="submit"><i
+                                    class="icofont icofont-pencil"></i> Edit</button>
                             @endcan
                             @can('user-destroy')
-                            <button class="btn btn-danger btn-delete-user" type="button" data-id="0"><i class="icofont icofont-trash"></i> Hapus</button>
+                            <button class="btn btn-danger btn-delete-user" type="button" data-id="0"><i
+                                    class="icofont icofont-trash"></i> Hapus</button>
                             @endcan
                         </div>
                     </form>

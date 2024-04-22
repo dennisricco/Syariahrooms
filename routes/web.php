@@ -91,6 +91,7 @@ Route::group([
         Route::get('/detail-transaction', [TransactionController::class, 'index'])->name('index');
         Route::get('/data', [TransactionController::class, 'data'])->name('data');
         Route::get('/{id}', [TransactionController::class, 'show'])->name('show');
+        Route::get('/filter', [TransactionController::class, 'filter'])->name('filter');
         Route::post('/store', [TransactionController::class, 'store'])->name('store');
         Route::delete('/{id}', [TransactionController::class, 'destroy'])->name('destroy');
         Route::post('/non-active-membership/{id}', [TransactionController::class, 'nonActiveMembership'])->name('nonActiveMembership');

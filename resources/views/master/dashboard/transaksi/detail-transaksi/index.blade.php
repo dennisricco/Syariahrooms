@@ -3,118 +3,416 @@
 @section('title', 'Transaksi | syariahrooms')
 
 @section('content')
-    <div class="row">
-        <h3 class="my-16">Data Transaksi</h3>
-        <div class="col">
-            <div class="card card-body">
-                <div class="col">
-                    <div class="row justify-content-between my-10 gap-10 px-0">
-                        <div class="row mx-md-0 col-auto mx-auto gap-10">
-                            @can('transaction-store')
-                                <button class="btn btn-primary col col-sm-auto add-transaksi"><i
-                                        class="ri-add-line remix-icon"></i><span>Tambah Transaksi</span></button>
-                            @endcan
-                        </div>
-                        <div class="mx-md-0 col-auto mx-auto">
-                            <div class="input-group align-items-center">
-                                <span class="input-group-text hp-bg-dark-100 border-end-0 pe-0 bg-white">
-                                    <i class="iconly-Light-Search text-black-80" style="font-size: 16px;"></i>
-                                </span>
-                                <input class="form-control border-start-0 ps-8" id="search_transaksi"
-                                    name="search_transaksi" type="text" value="" placeholder="Search Transaksi">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Mitra</th>
-                                    <th>Membership</th>
-                                    <th>Tanggal Mulai</th>
-                                    <th>Tanggal Selesai</th>
-                                    <th>Bayar Sekarang</th>
-                                    <th>Status Pembayaran</th>
-                                    <th>Aktif</th>
-                                    <th class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody_transaksi">
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center">
-                        <nav class="col-12 col-sm-auto text-center pagination_transaksi"
-                            aria-label="Page navigation example">
-                        </nav>
-                        <br>
-                        <p class="transaksi_entry"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @section('modal')
-        <div class="modal fade" id="modalTransaksi" aria-labelledby="modalTransaksi" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <form id="formTransaksi">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalTransaksiLabel">Tambah Transaksi</h5>
-                            <button class="btn-close hp-bg-none d-flex align-items-center justify-content-center"
-                                data-bs-dismiss="modal" type="button" aria-label="Close">
-                                <i class="ri-close-line hp-text-color-dark-0 lh-1" style="font-size: 24px;"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body body-transaksi">
-                            <input class="transaksi_id" id="transaksi_id" name="id" type="text" hidden>
-                            {{-- <div class="form-group">
-                                <label for="nama_mitra">Nama Mitra:</label>
-                                <select class="form-select nama_mitra" id="nama_mitra" name="user_id">
-                                    <option value="" disabled>Pilih Nama Mitra</option>
-                                    @foreach ($users as $u)
-                                        <option value="{{ $u->id }}">{{ $u->name }} </option>
-                                    @endforeach
-                                </select>
-                            </div> --}}
-                            <div class="form-group">
-                                <label for="membership">Membership:</label>
-                                <select class="form-select" id="membership" name="membership_id">
-                                    <option value="" disabled>Pilih Nama Membership</option>
-                                    @foreach ($memberships as $m)
-                                        <option value="{{ $m->id }}">{{ $m->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            @can('transaction-store')
-                                <button type="submit" class="btn btn-primary btn-save-transaksi"><i
-                                        class="icofont icofont-plus"></i>Simpan</button>
-                            @endcan
-                            @can('transaction-update')
-                                <button class="btn btn-primary btn-edit-transaksi" type="submit"><i
-                                        class="icofont icofont-pencil"></i> Edit</button>
-                            @endcan
-                            @can('transaction-destroy')
-                                <button class="btn btn-danger btn-delete-transaksi" type="button"><i
-                                        class="icofont icofont-trash"></i> Hapus</button>
-                                <button class="btn btn-outline-danger btn-lepas-membership" type="button"><i
-                                    class="icofont icofont-box"></i>Lepas Membership</button>
-                            @endcan
-                        </div>
+<div class="row">
 
-                    </form>
+
+    <div class="row mb-18">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="detail-transaction" class="text-decoration-none">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total Transaksi</div>
+                                <div class="h2 mb-0 font-weight-bold text-gray-800">{{ $totalTransactions['total'] }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4" id="successSection">
+            <a href="#" class="text-decoration-none" id="successLink">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total success</div>
+                                <div class="h2 mb-0 font-weight-bold text-gray-800" id="successCount">{{ $dataTransaksi['success'] }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <script>
+            document.getElementById('successLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                filterSuccessTransactions();
+            });
+        
+            function filterSuccessTransactions() {
+                var tableRows = document.getElementById('tbody_transaksi').getElementsByTagName('tr');
+                
+                for (var i = 0; i < tableRows.length; i++) {
+                    var statusColumn = tableRows[i].getElementsByTagName('td')[6].innerText.trim().toLowerCase();
+                    if (statusColumn !== 'success') {
+                        tableRows[i].style.display = 'none';
+                    } else {
+                        tableRows[i].style.display = '';
+                    }
+                }
+            }
+        </script>
+        
+        <div class="col-xl-3 col-md-6 mb-4" id="pendingSection">
+            <a href="#" class="text-decoration-none" id="pendingLink">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total pending</div>
+                                <div class="h2 mb-0 font-weight-bold text-gray-800" id="pendingCount">{{ $dataTransaksi['pending'] }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <script>
+            document.getElementById('pendingLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                filterPendingTransactions();
+            });
+        
+            function filterPendingTransactions() {
+                var tableRows = document.getElementById('tbody_transaksi').getElementsByTagName('tr');
+                
+                for (var i = 0; i < tableRows.length; i++) {
+                    var statusColumn = tableRows[i].getElementsByTagName('td')[6].innerText.trim().toLowerCase();
+                    if (statusColumn !== 'pending') {
+                        tableRows[i].style.display = 'none';
+                    } else {
+                        tableRows[i].style.display = '';
+                    }
+                }
+            }
+        </script>
+        
+        <div class="col-xl-3 col-md-6 mb-4" id="failedSection">
+            <a href="#" class="text-decoration-none" id="failedLink">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total failed</div>
+                                <div class="h2 mb-0 font-weight-bold text-gray-800" id="failedCount">{{ $dataTransaksi['failed'] }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <script>
+            document.getElementById('failedLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                filterFailedTransactions();
+            });
+        
+            function filterFailedTransactions() {
+                var tableRows = document.getElementById('tbody_transaksi').getElementsByTagName('tr');
+                
+                for (var i = 0; i < tableRows.length; i++) {
+                    var statusColumn = tableRows[i].getElementsByTagName('td')[6].innerText.trim().toLowerCase();
+                    if (statusColumn !== 'failed') {
+                        tableRows[i].style.display = 'none';
+                    } else {
+                        tableRows[i].style.display = '';
+                    }
+                }
+            }
+        </script>
+        
+        <div class="col-xl-3 col-md-6 mb-4" id="goldSection">
+            <a href="#" class="text-decoration-none" id="goldLink">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total gold</div>
+                                <div class="h2 mb-0 font-weight-bold text-gray-800" id="goldCount">{{ $dataMember['3'] }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <script>
+            document.getElementById('goldLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                filterGoldTransactions();
+            });
+        
+            function filterGoldTransactions() {
+                var tableRows = document.getElementById('tbody_transaksi').getElementsByTagName('tr');
+                
+                for (var i = 0; i < tableRows.length; i++) {
+                    var membershipColumn = tableRows[i].getElementsByTagName('td')[2].innerText.trim().toLowerCase();
+                    if (membershipColumn !== 'gold') {
+                        tableRows[i].style.display = 'none';
+                    } else {
+                        tableRows[i].style.display = '';
+                    }
+                }
+            }
+        </script>
+        
+        <div class="col-xl-3 col-md-6 mb-4" id="platinumSection">
+            <a href="#" class="text-decoration-none" id="platinumLink">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total platinum</div>
+                                <div class="h2 mb-0 font-weight-bold text-gray-800" id="platinumCount">{{ $dataMember['4'] }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <script>
+            document.getElementById('platinumLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                filterPlatinumTransactions();
+            });
+        
+            function filterPlatinumTransactions() {
+                var tableRows = document.getElementById('tbody_transaksi').getElementsByTagName('tr');
+                
+                for (var i = 0; i < tableRows.length; i++) {
+                    var membershipColumn = tableRows[i].getElementsByTagName('td')[2].innerText.trim().toLowerCase();
+                    if (membershipColumn !== 'platinum') {
+                        tableRows[i].style.display = 'none';
+                    } else {
+                        tableRows[i].style.display = '';
+                    }
+                }
+            }
+        </script>
+        
+
+
+
+        <div class="col-xl-3 col-md-6 mb-4" id="silverSection">
+            <a href="#" class="text-decoration-none" id="silverLink">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total silver</div>
+                                <div class="h2 mb-0 font-weight-bold text-gray-800" id="silverCount">{{ $dataMember['5'] }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas iconly-Broken-Wallet fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <script>
+            document.getElementById('silverLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                filtersilverTransactions();
+            });
+        
+            function filtersilverTransactions() {
+                var tableRows = document.getElementById('tbody_transaksi').getElementsByTagName('tr');
+                
+                for (var i = 0; i < tableRows.length; i++) {
+                    var membershipColumn = tableRows[i].getElementsByTagName('td')[2].innerText.trim().toLowerCase();
+                    if (membershipColumn !== 'silver') {
+                        tableRows[i].style.display = 'none';
+                    } else {
+                        tableRows[i].style.display = '';
+                    }
+                }
+            }
+        </script>
+    </div>
+
+</div>
+<h3 class="my-16">Data Transaksi</h3>
+<div class="col">
+    <div class="card card-body">
+
+        <div class="col">
+            <div class="row justify-content-between my-10 gap-10 px-0">
+                <div class="row mx-md-0 col-auto mx-auto gap-10">
+                    @can('transaction-store')
+                    <button class="btn btn-primary col col-sm-auto add-transaksi"><i
+                            class="ri-add-line remix-icon"></i><span>Tambah Transaksi</span></button>
+                    @endcan
+                </div>
+                <div class="mx-md-0 col-auto mx-auto">
+                    <div class="input-group align-items-center">
+                        <span class="input-group-text hp-bg-dark-100 border-end-0 pe-0 bg-white">
+                            <i class="iconly-Light-Search text-black-80" style="font-size: 16px;"></i>
+                        </span>
+                        <input class="form-control border-start-0 ps-8" id="search_transaksi" name="search_transaksi"
+                            type="text" value="" placeholder="Search Transaksi">
+                    </div>
                 </div>
             </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Mitra</th>
+                            <th>Membership</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Tanggal Selesai</th>
+                            <th>Bayar Sekarang</th>
+                            <th>Status Pembayaran</th>
+                            <th>Aktif</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody_transaksi">
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center">
+                <nav class="col-12 col-sm-auto text-center pagination_transaksi" aria-label="Page navigation example">
+                </nav>
+                <br>
+                <p class="transaksi_entry"></p>
+            </div>
         </div>
-    @endsection
+    </div>
+</div>
+@section('modal')
+<div class="modal fade" id="modalTransaksi" aria-labelledby="modalTransaksi" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="formTransaksi">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTransaksiLabel">Tambah Transaksi</h5>
+                    <button class="btn-close hp-bg-none d-flex align-items-center justify-content-center"
+                        data-bs-dismiss="modal" type="button" aria-label="Close">
+                        <i class="ri-close-line hp-text-color-dark-0 lh-1" style="font-size: 24px;"></i>
+                    </button>
+                </div>
+                <div class="modal-body body-transaksi">
+                    <input class="transaksi_id" id="transaksi_id" name="id" type="text" hidden>
+                    {{-- <div class="form-group">
+                        <label for="nama_mitra">Nama Mitra:</label>
+                        <select class="form-select nama_mitra" id="nama_mitra" name="user_id">
+                            <option value="" disabled>Pilih Nama Mitra</option>
+                            @foreach ($users as $u)
+                            <option value="{{ $u->id }}">{{ $u->name }} </option>
+                            @endforeach
+                        </select>
+                    </div> --}}
+                    <div class="form-group">
+                        <label for="membership">Membership:</label>
+                        <select class="form-select" id="membership" name="membership_id">
+                            <option value="" disabled>Pilih Nama Membership</option>
+                            @foreach ($memberships as $m)
+                            <option value="{{ $m->id }}">{{ $m->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @can('transaction-store')
+                    <button type="submit" class="btn btn-primary btn-save-transaksi"><i
+                            class="icofont icofont-plus"></i>Simpan</button>
+                    @endcan
+                    @can('transaction-update')
+                    <button class="btn btn-primary btn-edit-transaksi" type="submit"><i
+                            class="icofont icofont-pencil"></i> Edit</button>
+                    @endcan
+                    @can('transaction-destroy')
+                    <button class="btn btn-danger btn-delete-transaksi" type="button"><i
+                            class="icofont icofont-trash"></i> Hapus</button>
+                    <button class="btn btn-outline-danger btn-lepas-membership" type="button"><i
+                            class="icofont icofont-box"></i>Lepas Membership</button>
+                    @endcan
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
 </div>
 @endsection
 
 @section('js')
 <script src="{{ asset('app-assets/js/pagination/pagination.js') }}"></script>
+
+
+
 <script>
+    $(document).ready(function() {
+    // Event listener untuk tombol "Member Gold"
+    $('.member-gold-button').on('click', function() {
+        // Sembunyikan semua form keanggotaan
+        $('.membership-form').hide();
+        // Tampilkan form untuk member gold
+        $('#member-gold-form').show();
+    });
+
+    // Event listener untuk tombol "Member Platinum"
+    $('.member-platinum-button').on('click', function() {
+        // Sembunyikan semua form keanggotaan
+        $('.membership-form').hide();
+        // Tampilkan form untuk member platinum
+        $('#member-platinum-form').show();
+    });
+
+    // Event listener untuk tombol "Member Silver"
+    $('.member-silver-button').on('click', function() {
+        // Sembunyikan semua form keanggotaan
+        $('.membership-form').hide();
+        // Tampilkan form untuk member silver
+        $('#member-silver-form').show();
+    });
+});
+
+</script>
+
+<script>
+    $('#btn-pending').on('click', function() {
+    loadTransaksi(1, 'pending');
+});
+
     @canany(['transaction-store', 'transaction-update'])
         $('#formTransaksi').unbind('submit');
     @endcanany
@@ -143,7 +441,7 @@
         });
     }
 
-    function loadTransaksi(page, search) {
+    function loadTransaksi(page, search, filter = false) {
         search = $('#search_transaksi').val();
         $.ajax({
             type: "get",
