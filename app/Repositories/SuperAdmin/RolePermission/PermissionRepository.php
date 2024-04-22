@@ -3,8 +3,8 @@
 namespace App\Repositories\SuperAdmin\RolePermission;
 
 use App\Helper\Response;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
+use App\Models\Role;
 
 class PermissionRepository
 {

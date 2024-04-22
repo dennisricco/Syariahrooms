@@ -1,10 +1,6 @@
 <?php
 
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\loginController;
-use App\Http\Controllers\registerController;
 use App\Http\Controllers\SuperAdmin\HomeController;
 use App\Http\Controllers\SuperAdmin\User\UserController;
 use App\Http\Controllers\SuperAdmin\Profile\ProfileController;
@@ -26,31 +22,11 @@ use App\Http\Controllers\SuperAdmin\RolePermission\PermissionController;
 |
 */
 
+
 Route::get('/', function () {
-    return view('welcome');
-});
-
-
-Route::get('/test', function () {
-    return view('auth.test');
-});
-
-
-Route::get('/dashboard', function () {
     return view('dashboard');
-});
+})->name('dashboard');
 
-
-//Login
-
-Route::get('login', function () {
-    return view('auth.login');
-});
-Route::post('/loginproses', [loginController::class, 'loginproses'])->name('loginproses');
-
-//Register
-Route::get('/register', [registerController::class, 'register'])->name('register');
-Route::post('/registeruser', [registerController::class, 'registeruser'])->name('registeruser');
 
 Route::group([
     'prefix' => 'dashboard',

@@ -18,7 +18,7 @@
       <div class="w-full sm:w-1/2 pl-7 pr-7">
         <h2 class="font-bold text-black text-2xl font-sans">Welcome Back</h2>
         <p class="text-[#63B3A8] mt-1 font-sans">Login your account</p>
-        <form class="flex flex-col gap-2" form action="/loginproses" method="post">
+        <form class="flex flex-col gap-2" form action="{{ route('login') }}" method="post">
           @csrf
           <div class="flex flex-col sm:flex-row w-[330px] bg-[#DCDCDC] mt-3 rounded-lg gap-2">
             <input
