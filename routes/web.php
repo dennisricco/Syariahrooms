@@ -31,7 +31,7 @@ Route::get('/', function () {
 Route::group([
     'prefix' => 'dashboard',
     'as' => 'dashboard.',
-    'middleware' => 'auth'
+    'middleware' => ['auth','verified']
 ], function(){
     Route::get('/index', [HomeController::class, 'index'])->name('index');
     // Role
