@@ -77,7 +77,7 @@
           <div class="flex flex-col sm:flex-row w-[330px] bg-[#DCDCDC] rounded-lg gap-2">
             <input
               class="bg-[#DCDCDC] p-2 ml-6 border-l-2 border-l-[#DCDCDC] rounded-lg text-black font-sans sm:w-[304px]"
-              type="password" name="password-confirmation" id="password-confirmation" placeholder="Re-enter password"
+              type="password" name="password_confirmation" id="password_confirmation" placeholder="Re-enter password"
               required>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               class="bi bi-key absolute translate-x-2 translate-y-3" viewBox="0 0 16 16">
